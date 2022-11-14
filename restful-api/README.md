@@ -74,7 +74,7 @@ Giao thức HTTP xác định một số phương thức gán ý nghĩa ngữ ng
 - **POST** tạo một tài nguyên mới tại URI được chỉ định. Nội dung của thông báo yêu cầu cung cấp các chi tiết của tài nguyên mới. Lưu ý rằng POST cũng có thể được sử dụng để kích hoạt các hoạt động không thực sự tạo tài nguyên.
 - **PUT** tạo hoặc thay thế tài nguyên tại URI được chỉ định. Nội dung của thông báo yêu cầu chỉ định tài nguyên sẽ được tạo hoặc cập nhật.
 - **PATCH** thực hiện cập nhật một phần tài nguyên. Nội dung yêu cầu chỉ định tập hợp các thay đổi để áp dụng cho tài nguyên.
-- **DELETE**  xóa bỏ tài nguyên tại URI được chỉ định.
+- **DELETE** xóa bỏ tài nguyên tại URI được chỉ định.
 
 Hiệu quả của một yêu cầu cụ thể sẽ phụ thuộc vào việc tài nguyên là một bộ sưu tập hay một mục riêng lẻ. Bảng sau đây tóm tắt các quy ước chung được hầu hết các triển khai RESTful áp dụng bằng cách sử dụng ví dụ thương mại điện tử. Không phải tất cả các yêu cầu này đều có thể được thực hiện — nó phụ thuộc vào tình huống cụ thể.
 
@@ -92,3 +92,5 @@ Sự khác biệt giữa POST, PUT và PATCH có thể gây nhầm lẫn.
 - Yêu cầu **PATCH** thực hiện cập nhật một phần tài nguyên hiện có. Máy khách chỉ định URI cho tài nguyên. Nội dung yêu cầu chỉ định một tập hợp các thay đổi để áp dụng cho tài nguyên. Điều này có thể hiệu quả hơn so với sử dụng **PUT**, bởi vì máy khách chỉ gửi các thay đổi, không phải toàn bộ biểu diễn của tài nguyên. Về mặt kỹ thuật, **PATCH** cũng có thể tạo một tài nguyên mới (bằng cách chỉ định một tập hợp các bản cập nhật cho tài nguyên "null"), nếu máy chủ hỗ trợ điều này.
 
 Các yêu cầu **PUT** phải là không quan trọng. Nếu một khách hàng gửi cùng một yêu cầu **PUT** nhiều lần, kết quả phải luôn giống nhau (cùng một tài nguyên sẽ được sửa đổi với các giá trị giống nhau). Yêu cầu **POST** và **PATCH** không được đảm bảo là không cần thiết.
+
+Tuân theo ngữ nghĩa HTTP

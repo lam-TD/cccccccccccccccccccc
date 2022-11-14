@@ -42,20 +42,20 @@ https://adventure-works.com/orders/1
 
 ## Organize the API design around resources
 
-Ví dụ: trong hệ thống thương mại điện tử, các thực thể chính có thể là khách hàng và đơn đặt hàng. Việc tạo đơn hàng có thể đạt được bằng cách gửi một yêu cầu HTTP POST có chứa thông tin đơn hàng. Phản hồi HTTP cho biết đơn hàng đã được đặt thành công hay chưa. Khi có thể, các URI tài nguyên phải dựa trên danh từ (resource) chứ không phải động từ (các hoạt động trên resource).
+Ví dụ: trong hệ thống thương mại điện tử, các thực thể chính có thể là khách hàng và đơn đặt hàng. Việc tạo đơn hàng có thể đạt được bằng cách gửi một yêu cầu HTTP POST có chứa thông tin đơn hàng. Phản hồi HTTP cho biết đơn hàng đã được đặt thành công hay chưa. Khi có thể, các URI tài nguyên phải dựa trên danh từ(resource) chứ không phải động từ(các hoạt động trên resource).
 
-```text
-https://adventure-works.com/orders // Good
+```http
+GET https://adventure-works.com/orders // Good
 
-https://adventure-works.com/create-order // Avoid
+GET https://adventure-works.com/create-order // Avoid
 ```
 
 Một resource không nhất thiết phải dựa trên một dữ liệu duy nhất. Ví dụ: một thông tin đơn hàng có thể được lưu dưới dạng một số bảng trong cơ sở dữ liệu, nhưng được hiển thị cho khách hàng dưới dạng một thực thể duy nhất. Tránh tạo các API chỉ phản ánh cấu trúc bên trong của cơ sở dữ liệu. Mục đích của REST là mô hình hóa các thực thể và các hoạt động mà một ứng dụng có thể thực hiện trên các thực thể đó. Khách hàng không nên tiếp xúc với việc triển khai nội bộ.
 
-Các thực thể thường được nhóm lại với nhau thành các tập hợp (đơn đặt hàng, khách hàng). Một collection(bộ sưu tập) là một tài nguyên riêng biệt và phải có URI của riêng nó. Ví dụ: URI sau có thể đại diện cho tập hợp các đơn đặt hàng:
+Các thực thể thường được nhóm lại với nhau thành các tập hợp(đơn đặt hàng, khách hàng). Một collection(bộ sưu tập) là một tài nguyên riêng biệt và phải có URI của riêng nó. Ví dụ: URI sau có thể đại diện cho tập hợp các đơn đặt hàng:
 
 ```http
-https://adventure-works.com/orders
+GET https://adventure-works.com/orders
 ```
 
 Khi gửi 1 yêu cầu GET tới URI truy xuất danh sách các mục trong bộ sưu tập. Mỗi mục trong bộ sưu tập cũng có URI duy nhất của riêng nó. Yêu cầu GET tới URI của mặt hàng trả về thông tin chi tiết của mặt hàng đó.
@@ -74,39 +74,37 @@ Cuối cùng, có thể không ánh xạ mọi hoạt động được thực hi
 
 ## Xác định các hoạt động API theo các phương thức HTTP
 
-Giao thức HTTP xác định một số phương thức gán ý nghĩa ngữ nghĩa cho một yêu cầu. Các phương thức HTTP phổ biến được hầu hết các API web RESTful sử dụng là:
+Các phương thức HTTP phổ biến được hầu hết các API web RESTful sử dụng là:
 
-- **GET** truy xuất dữ liệu đại diện của tài nguyên tại URI được chỉ định. Nội dung của thông báo phản hồi chứa các chi tiết của tài nguyên được yêu cầu.
-- **POST** tạo một tài nguyên mới tại URI được chỉ định. Nội dung của thông báo yêu cầu cung cấp các chi tiết của tài nguyên mới. Lưu ý rằng POST cũng có thể được sử dụng để kích hoạt các hoạt động không thực sự tạo tài nguyên.
-- **PUT** tạo hoặc thay thế tài nguyên tại URI được chỉ định. Nội dung của thông báo yêu cầu chỉ định tài nguyên sẽ được tạo hoặc cập nhật.
-- **PATCH** thực hiện cập nhật một phần tài nguyên. Nội dung yêu cầu chỉ định tập hợp các thay đổi để áp dụng cho tài nguyên.
-- **DELETE** xóa bỏ tài nguyên tại URI được chỉ định.
+- **GET** truy xuất dữ liệu của resource tại URI được chỉ định. Nội dung của thông báo phản hồi chứa các chi tiết của resource được yêu cầu.
+- **POST** tạo một resource mới tại URI được chỉ định. Nội dung của thông báo yêu cầu cung cấp các chi tiết của resource mới. Lưu ý rằng POST cũng có thể được sử dụng để kích hoạt các hoạt động không thực sự tạo resource.
+- **PUT** tạo hoặc thay thế resource tại URI được chỉ định. Nội dung của thông báo yêu cầu chỉ định resource sẽ được tạo hoặc cập nhật.
+- **PATCH** thực hiện cập nhật một phần resource. Nội dung yêu cầu chỉ định tập hợp các thay đổi để áp dụng cho resource.
+- **DELETE** xóa bỏ resource tại URI được chỉ định.
 
-Hiệu quả của một yêu cầu cụ thể sẽ phụ thuộc vào việc tài nguyên là một bộ sưu tập hay một mục riêng lẻ. Bảng sau đây tóm tắt các quy ước chung được hầu hết các triển khai RESTful áp dụng bằng cách sử dụng ví dụ thương mại điện tử. Không phải tất cả các yêu cầu này đều có thể được thực hiện — nó phụ thuộc vào tình huống cụ thể.
+Hiệu quả của một yêu cầu cụ thể sẽ phụ thuộc vào việc resource là một collection(danh sách) hay một mục riêng lẻ. Bảng sau đây tóm tắt các quy ước chung được hầu hết các triển khai RESTful áp dụng bằng cách sử dụng ví dụ thương mại điện tử. Không phải tất cả các yêu cầu này đều có thể được thực hiện — nó phụ thuộc vào tình huống cụ thể.
 
 | Resource            | POST                              | GET                                   | PUT                                                | DELETE                               |
 |---------------------|-----------------------------------|---------------------------------------|----------------------------------------------------|--------------------------------------|
 | /customers          | Tạo mới một customer              | Lấy tất cả các customers              | Cập nhật hàng loạt customers                       | Xóa tất cả customers                 |
 | /customers/1        | Error                             | Lấy thông tin chi tiết cho customer 1 | Cập nhật thông tin chi tiết customer 1 nếu tồn tại | Xóa customer 1                       |
-| /customers/1/orders | Tạo đơn hàng mới cho customer 1 | Lấy tất cả các orders của customer 1  | Cập nhật hàng loạt orders của customer 1           | Xóa tất cà các orders của customer 1 |
+| /customers/1/orders | Tạo đơn hàng mới cho customer 1   | Lấy tất cả các orders của customer 1  | Cập nhật hàng loạt orders của customer 1           | Xóa tất cả các orders của customer 1 |
 
-Sự khác biệt giữa POST, PUT và PATCH có thể gây nhầm lẫn.
+Sự khác biệt giữa **POST**, **PUT** và **PATCH** có thể gây nhầm lẫn.
 
-- **POST** sẽ tạo ra một tài nguyên. Máy chủ chỉ định một URI cho tài nguyên mới và trả lại URI đó cho máy khách. Trong mô hình REST, bạn thường xuyên áp dụng các yêu cầu POST cho các bộ sưu tập. Tài nguyên mới được thêm vào bộ sưu tập. **POST** cũng có thể được sử dụng để gửi dữ liệu để xử lý đến một tài nguyên hiện có mà không cần tạo bất kỳ tài nguyên mới nào.
-- Một yêu cầu **PUT** tạo một tài nguyên hoặc cập nhật một tài nguyên hiện có. Máy khách chỉ định URI cho tài nguyên. Nội dung yêu cầu chứa một bản trình bày đầy đủ của tài nguyên. Nếu một tài nguyên có URI này đã tồn tại, nó sẽ được thay thế. Nếu không, một tài nguyên mới sẽ được tạo, nếu máy chủ hỗ trợ làm như vậy. Yêu cầu **PUT** được áp dụng thường xuyên nhất cho các tài nguyên là các mục riêng lẻ, chẳng hạn như một khách hàng cụ thể, thay vì các bộ sưu tập. Máy chủ có thể hỗ trợ cập nhật nhưng không hỗ trợ tạo qua **PUT**. Việc có hỗ trợ tạo qua **PUT** hay không phụ thuộc vào việc máy khách có thể gán một cách có ý nghĩa một URI cho một tài nguyên trước khi nó tồn tại hay không. Nếu không, hãy sử dụng POST để tạo tài nguyên và **PUT** hoặc **PATCH** để cập nhật.
-- Yêu cầu **PATCH** thực hiện cập nhật một phần tài nguyên hiện có. Máy khách chỉ định URI cho tài nguyên. Nội dung yêu cầu chỉ định một tập hợp các thay đổi để áp dụng cho tài nguyên. Điều này có thể hiệu quả hơn so với sử dụng **PUT**, bởi vì máy khách chỉ gửi các thay đổi, không phải toàn bộ biểu diễn của tài nguyên. Về mặt kỹ thuật, **PATCH** cũng có thể tạo một tài nguyên mới (bằng cách chỉ định một tập hợp các bản cập nhật cho tài nguyên "null"), nếu máy chủ hỗ trợ điều này.
+- **POST** sẽ tạo ra một resource. Server chỉ định một URI cho resource mới và trả lại URI đó cho client. Resource mới được thêm vào collection. **POST** cũng có thể được sử dụng để gửi dữ liệu để xử lý đến một resource hiện có mà không cần tạo bất kỳ resource mới nào.
+- Một yêu cầu **PUT** tạo một resource hoặc cập nhật một resource hiện có. Client chỉ định URI cho resource. Nội dung yêu cầu chứa dữ liệu đầy đủ của resource. Nếu một resource có URI này đã tồn tại, nó sẽ được thay thế. Nếu không, một resource mới sẽ được tạo, nếu server hỗ trợ làm như vậy. Yêu cầu **PUT** được áp dụng thường xuyên nhất cho các resource là các mục riêng lẻ, chẳng hạn như một khách hàng cụ thể, thay vì các collection. Server có thể hỗ trợ cập nhật nhưng không hỗ trợ tạo qua **PUT**. Việc có hỗ trợ tạo qua **PUT** hay không phụ thuộc vào việc client có thể gán một cách có ý nghĩa một URI cho một resource trước khi nó tồn tại hay không. Nếu không, hãy sử dụng POST để tạo resource và **PUT** hoặc **PATCH** để cập nhật.
+- Yêu cầu **PATCH** thực hiện cập nhật một phần resource hiện có. Client chỉ định URI cho resource. Nội dung yêu cầu chỉ định một tập hợp các thay đổi để áp dụng cho resource. Điều này có thể hiệu quả hơn so với sử dụng **PUT**, bởi vì client chỉ gửi các thay đổi, không phải toàn bộ dữ liệu của resource. Về mặt kỹ thuật, **PATCH** cũng có thể tạo một resource mới(bằng cách chỉ định một tập hợp các bản cập nhật cho resource "null"), nếu server hỗ trợ điều này.
 
-Các yêu cầu **PUT** phải là không quan trọng. Nếu một khách hàng gửi cùng một yêu cầu **PUT** nhiều lần, kết quả phải luôn giống nhau (cùng một tài nguyên sẽ được sửa đổi với các giá trị giống nhau). Yêu cầu **POST** và **PATCH** không được đảm bảo là không cần thiết.
-
-## Ngữ nghĩa HTTP
+## HTTP semantics
 
 ### Media types
 
-Như đã đề cập trước đó, máy khách và máy chủ trao đổi các đại diện của tài nguyên. Ví dụ, trong một yêu cầu POST, nội dung yêu cầu chứa một bản đại diện của tài nguyên cần tạo. Trong một yêu cầu GET, phần thân phản hồi chứa một bản trình bày của tài nguyên đã được tìm nạp.
+Như đã đề cập trước đó, client và server trao đổi các dữ liệu của tài nguyên. Ví dụ, trong một yêu cầu POST, nội dung yêu cầu chứa dữ liệu của tài nguyên cần tạo. Trong một yêu cầu GET, phần response body chứa một dữ liệu của tài nguyên đã được tìm và trả về.
 
-Trong giao thức HTTP, các định dạng được chỉ định thông qua việc sử dụng các loại phương tiện, còn được gọi là các loại MIME. Đối với dữ liệu không phải nhị phân, hầu hết các API web đều hỗ trợ JSON (media type = application/json) và có thể là XML (media type = application/xml).
+Trong giao thức HTTP, các định dạng được chỉ định thông qua việc sử dụng các loại phương tiện(_media types_), còn được gọi là các `MIME types`. Đối với dữ liệu không phải nhị phân, hầu hết các API web đều hỗ trợ JSON (media type = application/json) và có thể là XML (media type = application/xml).
 
- Header chứa Content-Type trong một yêu cầu hoặc phản hồi chỉ định định dạng của response. Dưới đây là một ví dụ về yêu cầu POST bao gồm dữ liệu JSON:
+Content-Type trong Header chỉ định định dạng của dữ liệu request hoặc response. Dưới đây là một ví dụ về 1 POST request bao gồm dữ liệu JSON:
 
 ```http
 POST <https://adventure-works.com/orders> HTTP/1.1
@@ -116,41 +114,41 @@ Content-Length: 57
 {"Id":1,"Name":"Gizmo","Category":"Widgets","Price":1.99}
 ```
 
-Nếu máy chủ không hỗ trợ loại phương tiện, nó sẽ trả về status code HTTP 415 (Media Type không được hỗ trợ).
+Nếu server không hỗ trợ media type, nó sẽ trả về status code HTTP 415 (Media Type không được hỗ trợ).
 
-Yêu cầu máy khách có thể bao gồm `Accept header` chứa danh sách các loại `media type` mà máy khách sẽ chấp nhận từ máy chủ trong thông báo phản hồi. Ví dụ:
+Một client request có thể bao gồm `Accept header` chứa danh sách các loại `media type` mà client sẽ chấp nhận từ server trong thông báo phản hồi. Ví dụ:
 
 ```http
 GET https://adventure-works.com/orders/2 HTTP/1.1
 Accept: application/json
 ```
 
-Nếu máy chủ không thể khớp với bất kỳ (các) loại phương tiện nào được liệt kê, nó sẽ trả về HTTP status code 406(Not Acceptable)
+Nếu máy chủ không thể khớp với bất kỳ (các) loại media type nào được liệt kê, nó sẽ trả về HTTP status code 406(Not Acceptable - Không chấp nhận)
 
 ### Phương thức GET
 
-Phương thức GET thành công thường trả về mã trạng thái HTTP 200 (OK). Nếu không tìm thấy tài nguyên, phương thức sẽ trả về 404 (Không tìm thấy).
+Phương thức GET thành công thường trả về mã trạng thái HTTP 200(OK). Nếu không tìm thấy resource, phương thức sẽ trả về 404(Không tìm thấy - Not Found).
 
-Nếu yêu cầu đã được thực hiện nhưng không có nội dung phản hồi nào được bao gồm trong phản hồi HTTP, thì nó sẽ trả về mã trạng thái HTTP 204 (Không có nội dung)/
+Nếu yêu cầu đã được thực hiện nhưng không có nội dung phản hồi nào được bao gồm trong phản hồi HTTP, thì nó sẽ trả về mã trạng thái HTTP 204(No Content - Không có nội dung)/
 Ví dụ: với hoạt động tìm kiếm không có kết quả phù hợp nào có thể được triển khai với hành vi này.
 
 ### Phương thức POST
 
-Nếu một phương thức POST tạo một tài nguyên mới, nó sẽ trả về mã trạng thái HTTP 201 (Đã tạo). URI của tài nguyên mới được bao gồm trong tiêu đề Vị trí của phản hồi. Phần nội dung phản hồi chứa một bản đại diện của tài nguyên.
+Nếu một phương thức POST tạo một tài nguyên mới, nó sẽ trả về mã trạng thái HTTP 201(Created - Đã được tạo). URI của tài nguyên mới được bao gồm trong tiêu đề Vị trí của phản hồi. Phần nội dung phản hồi chứa một bản đại diện của tài nguyên.
 
-Nếu phương thức thực hiện một số xử lý nhưng không tạo tài nguyên mới, phương thức có thể trả về mã trạng thái HTTP 200 và bao gồm kết quả của hoạt động trong phần thân phản hồi. Ngoài ra, nếu không có kết quả nào để trả về, phương thức có thể trả về mã trạng thái HTTP 204 (Không có Nội dung) mà không có nội dung phản hồi.
+Nếu phương thức thực hiện một số xử lý nhưng không tạo tài nguyên mới, phương thức có thể trả về mã trạng thái HTTP 200 và bao gồm kết quả của hoạt động trong phần thân phản hồi. Ngoài ra, nếu không có kết quả nào để trả về, phương thức có thể trả về mã trạng thái HTTP 204(No Content - Không có nội dung) mà không có nội dung phản hồi.
 
-Nếu máy khách đưa dữ liệu không hợp lệ vào yêu cầu, máy chủ sẽ trả về mã trạng thái HTTP 400 (Yêu cầu không hợp lệ). Nội dung phản hồi có thể chứa thông tin bổ sung về lỗi hoặc liên kết đến URI cung cấp thêm chi tiết.
+Nếu client đưa dữ liệu không hợp lệ vào yêu cầu, máy chủ sẽ trả về mã trạng thái HTTP 400(Bad Request - Yêu cầu không hợp lệ). Nội dung phản hồi có thể chứa thông tin bổ sung về lỗi hoặc liên kết đến URI cung cấp thêm thông tin chi tiết.
 
 ### Phương thức PUT
 
-Nếu một phương thức PUT tạo một tài nguyên mới, nó sẽ trả về mã trạng thái HTTP 201 (Đã tạo), giống như với một phương thức POST. Nếu phương thức cập nhật tài nguyên hiện có, nó sẽ trả về 200 (OK) hoặc 204 (Không có nội dung). Trong một số trường hợp, có thể không cập nhật được tài nguyên hiện có. Trong trường hợp đó, hãy xem xét trả lại mã trạng thái HTTP 409 (Xung đột).
+Nếu một phương thức PUT tạo một tài nguyên mới, nó sẽ trả về mã trạng thái HTTP 201(Created - Đã tạo), giống như với một phương thức POST. Nếu phương thức cập nhật tài nguyên hiện có, nó sẽ trả về 200(OK) hoặc 204 (Không có nội dung). Trong một số trường hợp, có thể không cập nhật được tài nguyên hiện có. Trong trường hợp đó, hãy xem xét trả lại mã trạng thái HTTP 409(Conflict - Xung đột).
 
-Xem xét triển khai các hoạt động HTTP PUT hàng loạt có thể cập nhật hàng loạt cho nhiều tài nguyên trong một bộ sưu tập. Yêu cầu PUT phải chỉ định URI của tập hợp và cơ quan yêu cầu phải chỉ định chi tiết của các tài nguyên sẽ được sửa đổi. Cách tiếp cận này có thể giúp giảm bớt sự tán gẫu và cải thiện hiệu suất.
+Xem xét triển khai các hoạt động HTTP PUT hàng loạt có thể cập nhật hàng loạt cho nhiều resource trong một collection. Yêu cầu PUT phải chỉ định chi tiết của các tài nguyên sẽ được sửa đổi. Cách tiếp cận này có thể giúp cải thiện hiệu suất.
 
 ### Phương thức PATCH
 
-Với một yêu cầu PATCH, máy khách sẽ gửi một tập hợp các bản cập nhật cho một tài nguyên hiện có, dưới dạng một tài liệu vá lỗi. Máy chủ xử lý tài liệu bản vá để thực hiện cập nhật. Tài liệu vá lỗi không mô tả toàn bộ tài nguyên, chỉ một tập hợp các thay đổi để áp dụng. Đặc tả cho phương thức PATCH ([RFC 5789](https://tools.ietf.org/html/rfc5789)) không xác định một định dạng cụ thể cho các tài liệu vá lỗi. Định dạng phải được suy ra từ loại phương tiện trong yêu cầu.
+Với một yêu cầu PATCH, client sẽ gửi một tập hợp các bản cập nhật cho một resource hiện có, dưới dạng một tài liệu vá lỗi. Máy chủ xử lý tài liệu bản vá để thực hiện cập nhật. Tài liệu vá lỗi không mô tả toàn bộ tài nguyên, chỉ một tập hợp các thay đổi để áp dụng. Đặc tả cho phương thức PATCH([RFC 5789](https://tools.ietf.org/html/rfc5789)) không xác định một định dạng cụ thể cho các tài liệu vá lỗi. Định dạng phải được suy ra từ loại phương tiện trong yêu cầu.
 
 JSON có lẽ là định dạng dữ liệu phổ biến nhất cho các web API. Có 2 loại JSON chính là:  `JSON patch` và `JSON merge patch`.
 `JSON merge patch` có phần đơn giản hơn, nó có cùng cấu trúc với JSON ban đầu, nhưng chỉ bao gồm tập con của các trường cần được thay đổi hoặc thêm vào. Ngoài ra, một trường có thể bị xóa bằng cách chỉ định null cho giá trị trong dữ liệu.

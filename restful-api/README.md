@@ -2,7 +2,7 @@
 
 Dưới đây là một số nguyên tắc thiết kế chính của RESTful API:
 
-- Các API REST được thiết kế xung quanh các tài nguyên, là bất kì loại đối tượng, dữ liệu hoặc dịch vụ nào mà client có thể truy cập.
+- Các REST API được thiết kế xung quanh các tài nguyên, là bất kì loại đối tượng, dữ liệu hoặc dịch vụ nào mà client có thể truy cập.
 - Một tài nguyên là một URI xác định duy nhất tài nguyên đó. Ví dụ: URI cho một đơn đặt hàng của khách hàng cụ thể có thể là:
 
 ```text
@@ -15,9 +15,9 @@ https://adventure-works.com/orders/1
 {"orderId":1,"orderValue":99.90,"productId":1,"quantity":1}
 ```
 
-- Các API REST sử dụng một giao diện thống nhất. Đối với các API REST được xây dựng trên HTTP, giao diện thống nhất bao gồm việc sử dụng các HTTP action tiêu chuẩn để thực hiện các hoạt động trên tài nguyên. Các action phổ biến nhất là `GET`, `POST`, `PUT`, `PATCH` và `DELETE`.
+- Các REST API sử dụng một cấu trúc thống nhất. Đối với các REST API được xây dựng trên HTTP, cấu trúc thống nhất bao gồm việc sử dụng các HTTP action tiêu chuẩn để thực hiện các hoạt động trên tài nguyên. Các action phổ biến nhất là `GET`, `POST`, `PUT`, `PATCH` và `DELETE`.
 
-- Các API REST sử dụng mô hình **stateless request**.
+- Các REST API sử dụng mô hình **stateless request**.
 
 >
 > **Stateless** còn gọi là **tình trạng phi trạng thái**. Cụ thể, stateless là **thiết kế không lưu dữ liệu của client trên server**. Điều đó có nghĩa là sau khi client gửi dữ liệu lên server, khi server thực thi > xong, trả kết quả thì quan hệ giữa client và server sẽ bị cắt đứt. Server sẽ không lưu bất kỳ dữ liệu gì của client.
@@ -25,7 +25,7 @@ https://adventure-works.com/orders/1
 
 - Các yêu cầu HTTP phải độc lập và có thể xảy ra theo bất kỳ thứ tự nào, vì vậy việc lưu giữ thông tin trạng thái tạm thời giữa các request là không khả thi. Nơi duy nhất mà thông tin được lưu trữ là trong chính các tài nguyên và mỗi request phải là một hoạt động nguyên tử(atomic operation - Một thao tác nguyên tử là một thao tác không thể được chia thành các thao tác nhỏ hơn.). Ràng buộc này cho phép các dịch vụ web có khả năng mở rộng cao, vì server sẽ không lưu bất kỳ dữ liệu gì của client.
 
-- Các API REST được điều khiển bởi các `hypermedia links` có trong thông tin được trả về. Ví dụ đươi đây cho thấy dữ liệu được trả về dạng JSON của một đơn đặt hàng. Nó chứa các liên kết để lấy hoặc cập nhật khách hàng được liên kết với đơn đặt hàng.
+- Các REST API được điều khiển bởi các `hypermedia links` có trong thông tin được trả về. Ví dụ đươi đây cho thấy dữ liệu được trả về dạng JSON của một đơn đặt hàng. Nó chứa các liên kết để lấy hoặc cập nhật khách hàng được liên kết với đơn đặt hàng.
 
 ```json
 {

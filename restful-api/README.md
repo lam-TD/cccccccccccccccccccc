@@ -42,7 +42,7 @@ https://adventure-works.com/create-order // Avoid
 
 Tài nguyên không nhất thiết phải dựa trên một mục dữ liệu vật lý. Ví dụ: một tài nguyên đơn hàng có thể được triển khai nội bộ dưới dạng một số bảng trong cơ sở dữ liệu quan hệ, nhưng được trình bày cho khách hàng dưới dạng một thực thể duy nhất. Tránh tạo các API chỉ phản ánh cấu trúc bên trong của cơ sở dữ liệu. Mục đích của REST là mô hình hóa các thực thể và các hoạt động mà một ứng dụng có thể thực hiện trên các thực thể đó. Khách hàng không nên tiếp xúc với việc triển khai nội bộ.
 
-Entities are often grouped together into collections (orders, customers). A collection is a separate resource from the item within the collection, and should have its own URI. For example, the following URI might represent the collection of orders:
+Các thực thể thường được nhóm lại với nhau thành các tập hợp (đơn đặt hàng, khách hàng). Bộ sưu tập là một tài nguyên riêng biệt với mục trong bộ sưu tập và phải có URI của riêng nó. Ví dụ: URI sau có thể đại diện cho tập hợp các đơn đặt hàng:
 ```text
 https://adventure-works.com/orders
 ```
@@ -82,7 +82,7 @@ Hiệu quả của một yêu cầu cụ thể sẽ phụ thuộc vào việc t�
 |---------------------|-----------------------------------|---------------------------------------|----------------------------------------------------|--------------------------------------|
 | /customers          | Tạo mới một customer              | Lấy tất cả các customers              | Cập nhật hàng loạt customers                       | Xóa tất cả customers                 |
 | /customers/1        | Error                             | Lấy thông tin chi tiết cho customer 1 | Cập nhật thông tin chi tiết customer 1 nếu tồn tại | Xóa customer 1                       |
-| /customers/1/orders | Tạo đơn hàng mới cho khách hàng 1 | Lấy tất cả các orders của customer 1  | Cập nhật hàng loạt orders của customer 1           | Xóa tất cà các orders của customer 1 |
+| /customers/1/orders | Tạo đơn hàng mới cho customer 1 | Lấy tất cả các orders của customer 1  | Cập nhật hàng loạt orders của customer 1           | Xóa tất cà các orders của customer 1 |
 
 Sự khác biệt giữa POST, PUT và PATCH có thể gây nhầm lẫn.
 

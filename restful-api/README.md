@@ -43,7 +43,7 @@ https://adventure-works.com/create-order // Avoid
 Tài nguyên không nhất thiết phải dựa trên một mục dữ liệu vật lý. Ví dụ: một tài nguyên đơn hàng có thể được triển khai nội bộ dưới dạng một số bảng trong cơ sở dữ liệu quan hệ, nhưng được trình bày cho khách hàng dưới dạng một thực thể duy nhất. Tránh tạo các API chỉ phản ánh cấu trúc bên trong của cơ sở dữ liệu. Mục đích của REST là mô hình hóa các thực thể và các hoạt động mà một ứng dụng có thể thực hiện trên các thực thể đó. Khách hàng không nên tiếp xúc với việc triển khai nội bộ.
 
 Entities are often grouped together into collections (orders, customers). A collection is a separate resource from the item within the collection, and should have its own URI. For example, the following URI might represent the collection of orders:
-```json
+```text
 https://adventure-works.com/orders
 ```
 
@@ -64,3 +64,30 @@ Một yếu tố khác là tất cả các yêu cầu web đều áp đặt tả
 Tránh giới thiệu sự phụ thuộc giữa API web và các nguồn dữ liệu cơ bản. Ví dụ: nếu dữ liệu của bạn được lưu trữ trong cơ sở dữ liệu quan hệ, thì web API không cần hiển thị mỗi bảng dưới dạng tập hợp tài nguyên. Trên thực tế, đó có lẽ là một thiết kế kém. Thay vào đó, hãy nghĩ về API web như một phần trừu tượng của cơ sở dữ liệu. Nếu cần, hãy giới thiệu một lớp ánh xạ giữa cơ sở dữ liệu và API web. Bằng cách đó, các ứng dụng khách được cách ly khỏi những thay đổi đối với lược đồ cơ sở dữ liệu bên dưới.
 
 Cuối cùng, có thể không ánh xạ mọi hoạt động được thực hiện bởi API web tới một tài nguyên cụ thể. Bạn có thể xử lý các tình huống phi tài nguyên như vậy thông qua các yêu cầu HTTP gọi một hàm và trả về kết quả dưới dạng thông báo phản hồi HTTP. Ví dụ: một API web triển khai các hoạt động máy tính đơn giản như cộng và trừ có thể cung cấp các URI hiển thị các hoạt động này dưới dạng tài nguyên giả và sử dụng chuỗi truy vấn để chỉ định các tham số được yêu cầu. Ví dụ: một yêu cầu GET tới URI */add?operand1=99&operand2=1* sẽ trả về một thông báo phản hồi với phần nội dung chứa giá trị 100. Tuy nhiên, chỉ sử dụng các dạng URI này một cách tiết kiệm.
+
+# Xác định các hoạt động API theo các phương thức HTTP
+
+Giao thức HTTP xác định một số phương thức gán ý nghĩa ngữ nghĩa cho một yêu cầu. Các phương thức HTTP phổ biến được hầu hết các API web RESTful sử dụng là:
+
+- **GET** truy xuất dữ liệu đại diện của tài nguyên tại URI được chỉ định. Nội dung của thông báo phản hồi chứa các chi tiết của tài nguyên được yêu cầu.
+- **POST** tạo một tài nguyên mới tại URI được chỉ định. Nội dung của thông báo yêu cầu cung cấp các chi tiết của tài nguyên mới. Lưu ý rằng POST cũng có thể được sử dụng để kích hoạt các hoạt động không thực sự tạo tài nguyên.
+- **PUT** tạo hoặc thay thế tài nguyên tại URI được chỉ định. Nội dung của thông báo yêu cầu chỉ định tài nguyên sẽ được tạo hoặc cập nhật.
+- **PATCH** thực hiện cập nhật một phần tài nguyên. Nội dung yêu cầu chỉ định tập hợp các thay đổi để áp dụng cho tài nguyên.
+- **DELETE**  xóa bỏ tài nguyên tại URI được chỉ định.
+
+Hiệu quả của một yêu cầu cụ thể sẽ phụ thuộc vào việc tài nguyên là một bộ sưu tập hay một mục riêng lẻ. Bảng sau đây tóm tắt các quy ước chung được hầu hết các triển khai RESTful áp dụng bằng cách sử dụng ví dụ thương mại điện tử. Không phải tất cả các yêu cầu này đều có thể được thực hiện — nó phụ thuộc vào tình huống cụ thể.
+
+
+| Resource            | POST                              | GET                                   | PUT                                                | DELETE                               |
+|---------------------|-----------------------------------|---------------------------------------|----------------------------------------------------|--------------------------------------|
+| /customers          | Tạo mới một customer              | Lấy tất cả các customers              | Cập nhật hàng loạt customers                       | Xóa tất cả customers                 |
+| /customers/1        | Error                             | Lấy thông tin chi tiết cho customer 1 | Cập nhật thông tin chi tiết customer 1 nếu tồn tại | Xóa customer 1                       |
+| /customers/1/orders | Tạo đơn hàng mới cho khách hàng 1 | Lấy tất cả các orders của customer 1  | Cập nhật hàng loạt orders của customer 1           | Xóa tất cà các orders của customer 1 |
+
+Sự khác biệt giữa POST, PUT và PATCH có thể gây nhầm lẫn.
+
+- **POST** sẽ tạo ra một tài nguyên. Máy chủ chỉ định một URI cho tài nguyên mới và trả lại URI đó cho máy khách. Trong mô hình REST, bạn thường xuyên áp dụng các yêu cầu POST cho các bộ sưu tập. Tài nguyên mới được thêm vào bộ sưu tập. **POST** cũng có thể được sử dụng để gửi dữ liệu để xử lý đến một tài nguyên hiện có mà không cần tạo bất kỳ tài nguyên mới nào.
+- Một yêu cầu **PUT** tạo một tài nguyên hoặc cập nhật một tài nguyên hiện có. Máy khách chỉ định URI cho tài nguyên. Nội dung yêu cầu chứa một bản trình bày đầy đủ của tài nguyên. Nếu một tài nguyên có URI này đã tồn tại, nó sẽ được thay thế. Nếu không, một tài nguyên mới sẽ được tạo, nếu máy chủ hỗ trợ làm như vậy. Yêu cầu **PUT** được áp dụng thường xuyên nhất cho các tài nguyên là các mục riêng lẻ, chẳng hạn như một khách hàng cụ thể, thay vì các bộ sưu tập. Máy chủ có thể hỗ trợ cập nhật nhưng không hỗ trợ tạo qua **PUT**. Việc có hỗ trợ tạo qua **PUT** hay không phụ thuộc vào việc máy khách có thể gán một cách có ý nghĩa một URI cho một tài nguyên trước khi nó tồn tại hay không. Nếu không, hãy sử dụng POST để tạo tài nguyên và **PUT** hoặc **PATCH** để cập nhật.
+- Yêu cầu **PATCH** thực hiện cập nhật một phần tài nguyên hiện có. Máy khách chỉ định URI cho tài nguyên. Nội dung yêu cầu chỉ định một tập hợp các thay đổi để áp dụng cho tài nguyên. Điều này có thể hiệu quả hơn so với sử dụng **PUT**, bởi vì máy khách chỉ gửi các thay đổi, không phải toàn bộ biểu diễn của tài nguyên. Về mặt kỹ thuật, **PATCH** cũng có thể tạo một tài nguyên mới (bằng cách chỉ định một tập hợp các bản cập nhật cho tài nguyên "null"), nếu máy chủ hỗ trợ điều này.
+
+Các yêu cầu **PUT** phải là không quan trọng. Nếu một khách hàng gửi cùng một yêu cầu **PUT** nhiều lần, kết quả phải luôn giống nhau (cùng một tài nguyên sẽ được sửa đổi với các giá trị giống nhau). Yêu cầu **POST** và **PATCH** không được đảm bảo là không cần thiết.

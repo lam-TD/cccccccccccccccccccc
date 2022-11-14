@@ -8,7 +8,6 @@ Dưới đây là một số nguyên tắc thiết kế chính của RESTful API
 ```http request
 GET https://adventure-works.com/orders/1
 ```
-
 - Client tương tác với một dịch vụ bằng cách trao đổi các đại diện của tài nguyên. Nhiều API web sự dung JSON làm định dạng tra đổi. Ví dụ một yêu cầu GET tới URI được liệt kê ở trên có thể trả về nội dung phản hồi này:
 ```json
 {"orderId":1,"orderValue":99.90,"productId":1,"quantity":1}

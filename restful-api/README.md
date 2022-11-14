@@ -16,7 +16,7 @@ https://adventure-works.com/orders/1
 ```
 - Các API REST sử dụng một giao diện thống nhất, giúp phân tách việc triển khai máy khách và dịch vụ. Đối với các API REST được xây dựng trên HTTP, giao diện thống nhất bao gồm việc sử dụng các động từ HTTP tiêu chuẩn để thực hiện các hoạt động trên tài nguyên. Các thao tác phổ biến nhất là **GET**, **POST**, **PUT**, **PATCH** và **DELETE**.
 - Các API REST sử dụng mô hình yêu cầu không trạng thái. Các yêu cầu HTTP phải độc lập và có thể xảy ra theo bất kỳ thứ tự nào, vì vậy việc lưu giữ thông tin trạng thái tạm thời giữa các yêu cầu là không khả thi. Nơi duy nhất mà thông tin được lưu trữ là trong chính các tài nguyên và mỗi yêu cầu phải là một hoạt động nguyên tử. Ràng buộc này cho phép các dịch vụ web có khả năng mở rộng cao, vì không cần phải giữ lại bất kỳ mối quan hệ nào giữa các máy khách và máy chủ cụ thể. Bất kỳ máy chủ nào cũng có thể xử lý bất kỳ yêu cầu nào từ bất kỳ máy khách nào. Điều đó nói rằng, các yếu tố khác có thể hạn chế khả năng mở rộng. Ví dụ: nhiều dịch vụ web ghi vào kho dữ liệu phụ trợ, có thể khó mở rộng quy mô. Để biết thêm thông tin về các chiến lược mở rộng quy mô kho dữ liệu, hãy xem Phân vùng dữ liệu theo chiều ngang, chiều dọc và chức năng.
-- Các API REST được điều khiển bởi các liên kết siêu phương tiện có trong biểu diễn. Ví dụ: phần sau cho thấy trình bày JSON của một đơn đặt hàng. Nó chứa các liên kết để lấy hoặc cập nhật khách hàng được liên kết với đơn đặt hàng.
+- Các API REST được điều khiển bởi các hypermedia links có thông tin được trả về. Ví dụ: phần sau cho thấy dữ liệu được trả về dạng JSON của một đơn đặt hàng. Nó chứa các liên kết để lấy hoặc cập nhật khách hàng được liên kết với đơn đặt hàng.
 ```json
 {
     "orderID":3,
@@ -43,6 +43,7 @@ https://adventure-works.com/create-order // Avoid
 Tài nguyên không nhất thiết phải dựa trên một mục dữ liệu vật lý. Ví dụ: một tài nguyên đơn hàng có thể được triển khai nội bộ dưới dạng một số bảng trong cơ sở dữ liệu quan hệ, nhưng được trình bày cho khách hàng dưới dạng một thực thể duy nhất. Tránh tạo các API chỉ phản ánh cấu trúc bên trong của cơ sở dữ liệu. Mục đích của REST là mô hình hóa các thực thể và các hoạt động mà một ứng dụng có thể thực hiện trên các thực thể đó. Khách hàng không nên tiếp xúc với việc triển khai nội bộ.
 
 Các thực thể thường được nhóm lại với nhau thành các tập hợp (đơn đặt hàng, khách hàng). Bộ sưu tập là một tài nguyên riêng biệt với mục trong bộ sưu tập và phải có URI của riêng nó. Ví dụ: URI sau có thể đại diện cho tập hợp các đơn đặt hàng:
+
 ```text
 https://adventure-works.com/orders
 ```

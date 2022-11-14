@@ -5,9 +5,11 @@ Dưới đây là một số nguyên tắc thiết kế chính của RESTful API
 
 - Các API REST được thiết kế xung quanh các tài nguyên, là bất kì loại đối tượng, dữ liệu hoặc dịch vụ nào mà client có thể truy cập.
 - Một tài nguyên có một định danh, là một URI xác định duy nhất tài nguyên đó. Ví dụ: URI cho một đơn đặt hàng của khách hàng cụ thể có thể là:
-```http request
-GET https://adventure-works.com/orders/1
+
+```text
+https://adventure-works.com/orders/1
 ```
+
 - Client tương tác với một dịch vụ bằng cách trao đổi các đại diện của tài nguyên. Nhiều API web sự dung JSON làm định dạng tra đổi. Ví dụ một yêu cầu GET tới URI được liệt kê ở trên có thể trả về nội dung phản hồi này:
 ```json
 {"orderId":1,"orderValue":99.90,"productId":1,"quantity":1}
@@ -32,7 +34,7 @@ GET https://adventure-works.com/orders/1
 
 Tập trung vào các thực thể kinh doanh mà API web hiển thị. Ví dụ: trong hệ thống thương mại điện tử, các thực thể chính có thể là khách hàng và đơn đặt hàng. Việc tạo đơn hàng có thể đạt được bằng cách gửi một yêu cầu HTTP POST có chứa thông tin đơn hàng. Phản hồi HTTP cho biết đơn hàng đã được đặt thành công hay chưa. Khi có thể, các URI tài nguyên phải dựa trên danh từ (tài nguyên) chứ không phải động từ (các hoạt động trên tài nguyên).
 
-```json
+```text
 https://adventure-works.com/orders // Good
 
 https://adventure-works.com/create-order // Avoid
@@ -53,12 +55,9 @@ Cũng xem xét các mối quan hệ giữa các loại tài nguyên khác nhau v
 
 Trong các hệ thống phức tạp hơn, có thể hấp dẫn để cung cấp các URI cho phép khách hàng điều hướng qua một số cấp độ của mối quan hệ, chẳng hạn như `/customers/1/orders/99/products`. Tuy nhiên, mức độ phức tạp này có thể khó duy trì và không linh hoạt nếu mối quan hệ giữa các nguồn lực thay đổi trong tương lai. Thay vào đó, hãy cố gắng giữ cho các URI tương đối đơn giản. Khi một ứng dụng có tham chiếu đến một tài nguyên, có thể sử dụng tham chiếu này để tìm các mục liên quan đến tài nguyên đó. Truy vấn trước có thể được thay thế bằng URI `/customers/1/orders` để tìm tất cả đơn hàng cho khách hàng 1 và sau đó `/orders/99/products` để tìm sản phẩm trong đơn hàng này.
 
----
-**Tip**
+> **_NOTE:_** Tránh yêu cầu các URI tài nguyên phức tạp hơn *collection/item/collection*.
 
-It works with almost all markdown flavours (the below blank line matters).
 
----
 
 Một yếu tố khác là tất cả các yêu cầu web đều áp đặt tải lên máy chủ web. Yêu cầu càng nhiều, tải càng lớn. Do đó, hãy cố gắng tránh các API web "chatty" làm lộ ra một số lượng lớn các tài nguyên nhỏ. Một API như vậy có thể yêu cầu ứng dụng khách gửi nhiều yêu cầu để tìm tất cả dữ liệu mà nó yêu cầu. Thay vào đó, bạn có thể muốn chuẩn hóa dữ liệu và kết hợp thông tin liên quan thành các tài nguyên lớn hơn có thể được truy xuất bằng một yêu cầu duy nhất. Tuy nhiên, bạn cần phải cân bằng phương pháp này so với chi phí tìm nạp dữ liệu mà khách hàng không cần. Việc truy xuất các đối tượng lớn có thể làm tăng độ trễ của một yêu cầu và phát sinh thêm chi phí băng thông. Để biết thêm thông tin về các phản vật chất hiệu suất này, hãy xem [Chatty I/O](https://learn.microsoft.com/en-us/azure/architecture/antipatterns/chatty-io/) và [Extraneous Fetching](https://learn.microsoft.com/en-us/azure/architecture/antipatterns/extraneous-fetching/).
 

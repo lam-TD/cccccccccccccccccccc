@@ -14,7 +14,7 @@ GET https://adventure-works.com/orders/1
 ```
 - Các API REST sử dụng một giao diện thống nhất, giúp phân tách việc triển khai máy khách và dịch vụ. Đối với các API REST được xây dựng trên HTTP, giao diện thống nhất bao gồm việc sử dụng các động từ HTTP tiêu chuẩn để thực hiện các hoạt động trên tài nguyên. Các thao tác phổ biến nhất là **GET**, **POST**, **PUT**, **PATCH** và **DELETE**.
 - Các API REST sử dụng mô hình yêu cầu không trạng thái. Các yêu cầu HTTP phải độc lập và có thể xảy ra theo bất kỳ thứ tự nào, vì vậy việc lưu giữ thông tin trạng thái tạm thời giữa các yêu cầu là không khả thi. Nơi duy nhất mà thông tin được lưu trữ là trong chính các tài nguyên và mỗi yêu cầu phải là một hoạt động nguyên tử. Ràng buộc này cho phép các dịch vụ web có khả năng mở rộng cao, vì không cần phải giữ lại bất kỳ mối quan hệ nào giữa các máy khách và máy chủ cụ thể. Bất kỳ máy chủ nào cũng có thể xử lý bất kỳ yêu cầu nào từ bất kỳ máy khách nào. Điều đó nói rằng, các yếu tố khác có thể hạn chế khả năng mở rộng. Ví dụ: nhiều dịch vụ web ghi vào kho dữ liệu phụ trợ, có thể khó mở rộng quy mô. Để biết thêm thông tin về các chiến lược mở rộng quy mô kho dữ liệu, hãy xem Phân vùng dữ liệu theo chiều ngang, chiều dọc và chức năng.
-- REST APIs are driven by hypermedia links that are contained in the representation. For example, the following shows a JSON representation of an order. It contains links to get or update the customer associated with the order.
+- Các API REST được điều khiển bởi các liên kết siêu phương tiện có trong biểu diễn. Ví dụ: phần sau cho thấy trình bày JSON của một đơn đặt hàng. Nó chứa các liên kết để lấy hoặc cập nhật khách hàng được liên kết với đơn đặt hàng.
 ```json
 {
     "orderID":3,

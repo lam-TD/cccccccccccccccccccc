@@ -27,3 +27,7 @@ GET https://adventure-works.com/orders/1
     ]
 }
 ```
+
+# Organize the API design around resources
+
+Tập trung vào các thực thể kinh doanh mà API web hiển thị. Ví dụ: trong hệ thống thương mại điện tử, các thực thể chính có thể là khách hàng và đơn đặt hàng. Việc tạo đơn hàng có thể đạt được bằng cách gửi một yêu cầu HTTP POST có chứa thông tin đơn hàng. Phản hồi HTTP cho biết đơn hàng đã được đặt thành công hay chưa. Khi có thể, các URI tài nguyên phải dựa trên danh từ (tài nguyên) chứ không phải động từ (các hoạt động trên tài nguyên).

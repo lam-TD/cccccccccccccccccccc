@@ -128,8 +128,6 @@ Các methods(tên hàm) phải được viết dưới dạng `camelCase()`.
 
 Chuẩn [PSR-2](https://www.php-fig.org/psr/psr-2/) đã được thay thế bằng chuẩn [PSR-12](https://www.php-fig.org/psr/psr-12/).
 
-- Điều kiện tiên quyết là phải đạt chuẩn PSR-1.
-
 Ví dụ dưới đây mô tả một số quy tắc dưới dạng tổng quan nhanh:
 
 ```php
@@ -166,13 +164,194 @@ class Foo extends Bar implements FooInterface
 }
 ```
 
-1. Basic coding standard
+1. Chung
+
+**Basic coding standard**
 
 Code PHẢI tuân theo tất cả các quy tắc trong `PSR-1`.
 
 Thuật ngữ `StudlyCaps` trong `PSR-1` PHẢI được hiểu là `PascalCase` trong đó chữ cái đầu tiên của mỗi từ được viết hoa bao gồm cả chữ cái đầu tiên.
 
-2. Files
+**Files**
 
 - Tất cả các file PHP phải kết thúc bằng một dòng không chứa khoảng trắng, được kết thức bằng 1 LF duy nhất.
 - Thẻ đóng `?>` phải được bỏ qua nếu file chỉ chứa code PHP.
+
+**Lines**
+
+- KHÔNG ĐƯỢC có giới hạn cứng về độ dài của dòng.
+- Giới hạn mềm về độ dài dòng PHẢI là 120 ký tự.
+- Các dòng KHÔNG NÊN dài hơn 80 ký tự; các dòng dài hơn NÊN được chia thành nhiều dòng tiếp theo, mỗi dòng không quá 80 ký tự.
+- KHÔNG ĐƯỢC có khoảng trắng ở cuối dòng.
+- Các dòng trống CÓ THỂ được thêm vào để cải thiện khả năng đọc và để chỉ ra các khối mã có liên quan trừ khi bị cấm rõ ràng.
+- KHÔNG ĐƯỢC có nhiều hơn một câu lệnh trên mỗi dòng.
+
+**Indenting(thụt lề)**
+
+Sử dụng 4 khoảng trắng(spaces) để thụt dòng thay vì dùng tab.
+
+**Keywords and Types**
+
+- Tất cả các loại và từ khóa dành riêng cho PHP [[List of Keywords](https://www.php.net/manual/en/reserved.keywords.php)] [[List of other reserved words](https://www.php.net/manual/en/reserved.other-reserved-words.php)] PHẢI ở dạng chữ thường.
+- Dạng rút gọn của từ `type keywords` PHẢI được sử dụng, tức là bool thay vì boolean, int thay vì số integer, v.v.
+
+**Declare Statements, Namespace, and Import Statements**
+
+Ví dụ sau đây minh họa một danh sách đầy đủ của tất cả các trường hợp:
+
+```php
+<?php
+
+/**
+ * This file contains an example of coding styles.
+ */
+
+declare(strict_types=1);
+
+namespace Vendor\Package;
+
+use Vendor\Package\{ClassA as A, ClassB, ClassC as C};
+use Vendor\Package\SomeNamespace\ClassD as D;
+use Vendor\Package\AnotherNamespace\ClassE as E;
+
+use function Vendor\Package\{functionA, functionB, functionC};
+use function Another\Vendor\functionD;
+
+use const Vendor\Package\{CONSTANT_A, CONSTANT_B, CONSTANT_C};
+use const Another\Vendor\CONSTANT_D;
+
+/**
+ * FooBar is an example class.
+ */
+class FooBar
+{
+    // ... additional PHP code ...
+}
+
+```
+
+Không nên gộp các class có level namespace lớn hơn 2.
+
+```php
+<?php
+
+use Vendor\Package\SomeNamespace\{
+    SubnamespaceOne\ClassA,
+    SubnamespaceOne\ClassB,
+    SubnamespaceTwo\ClassY,
+    ClassZ,
+};
+```
+
+Đây là một trường hợp nên tránh:
+```php
+<?php
+
+use Vendor\Package\SomeNamespace\{
+    SubnamespaceOne\AnotherNamespace\ClassA,
+    SubnamespaceOne\ClassB,
+    ClassZ,
+};
+```
+
+**Classes, Properties, and Methods**
+
+Khi khởi tạo một lớp mới, PHẢI luôn có dấu ngoặc đơn ngay cả khi không có tham số nào được truyền cho `__construct`.
+
+```php
+new Foo; //should not
+new Foo()
+```
+
+**Extends and Implements**
+
+- Các từ khóa `extends` và `implements` PHẢI được khai báo trên cùng một dòng với tên lớp.
+
+```php
+<?php
+
+class ClassName extends ParentClass implements \ArrayAccess
+{
+    // constants, properties, methods
+}
+```
+
+- Thẻ đóng và mở của 1 hàm {} phải nằm riêng biệt trên một dòng.
+- Trước thẻ mở và đóng hàm {} thì không được có 1 dòng trắng.
+- Phải dùng dấu nháy đơn `'` để khai báo chuỗi không chứa biến, nếu chuỗi có chứa kí tự `'` thì có thể dùng dấu nháy kép `"""` để bọc bên ngoài.
+
+Trong trường hợp một class `implements` nhiều `interface` thì nên như thế này:
+
+```php
+<?php
+
+namespace Vendor\Package;
+
+use FooClass;
+use BarClass as Bar;
+use OtherVendor\OtherPackage\BazClass;
+
+class ClassName extends ParentClass implements
+    \ArrayAccess,
+    \Countable,
+    \Serializable
+{
+    // constants, properties, methods
+}
+```
+
+Cần tránh:
+
+```php
+class ClassName extends ParentClass implements \ArrayAccess, \Countable
+{
+    // constants, properties, methods
+}
+```
+
+**Sử dụng `trait`**
+
+Từ khóa `use` được sử dụng bên trong các lớp để triển khai các `trait` PHẢI được khai báo trên dòng tiếp theo sau dấu `{`.
+
+- Mỗi `trait` nên nằm riêng biệt trên một dòng.
+
+```php
+class ClassName
+{
+    use FirstTrait;
+    use SecondTrait;
+    use ThirdTrait;
+}
+```
+
+- Phải có một dòng trống sau khi sử dụng `use` để import trait.
+
+```php
+class ClassName
+{
+    use FirstTrait;
+
+    private $property;
+}
+```
+
+
+Khi sử dụng các toán tử `insteadof` và `as` nên sử dụng như sau:
+
+```php
+<?php
+
+class Talker
+{
+    use A;
+    use B {
+        A::smallTalk insteadof B;
+    }
+    use C {
+        B::bigTalk insteadof C;
+        C::mediumTalk as FooBar;
+    }
+}
+```
+
+
